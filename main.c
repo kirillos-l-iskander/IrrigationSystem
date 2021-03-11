@@ -1,27 +1,59 @@
-#include "CONFIG.h"
-#include "PORT.h"
-#include "SCH_CONFIG.h"
-#include "SCH.h"
-#include "TIM.h"
-#include "GPIO.h"
-#include "LED.h"
+#include "SchedulerConfig.h"
+#include "Scheduler.h"
+#include "Config.h"
 
-#include "LCD.h"
-#include "IS.h"
+#include "Gpio.h"
+#include "Timer.h"
 
-int main(void)
+#include "Led.h"
+#include "LedTask.h"
+#include "Lcd.h"
+#include "LcdTask.h"
+#include "SoilSensor.h"
+#include "WaterSensor.h"
+#include "Motor.h"
+#include "IrrigationTask.h"
+
+static void (*systickInterrupt)( void ) = NULL;
+
+ISR(TIMER1_COMPA_vect)
 {
-	SCH_Init();
-	LED_Init();
-	LCD_Init();
-	TIM0_InitPWM0();
-	SCH_Add_Task(LED_Update, 0/SCH_TICK_PERIOD_MS, LED_UPDATE/SCH_TICK_PERIOD_MS);
-	SCH_Add_Task(IS_Update, 1/SCH_TICK_PERIOD_MS, IS_UPDATE/SCH_TICK_PERIOD_MS);
-	SCH_Add_Task(LCD_Update, 2/SCH_TICK_PERIOD_MS, LCD_UPDATE/SCH_TICK_PERIOD_MS);
-	SCH_Start();
-	while(1)
+	(*systickInterrupt)();
+}
+
+int main( void )
+{
+	Led_SetGpio( 0, LED0_GPIO, LED0_PIN );
+	Led_Init();
+	LedTask_Init();
+
+	Lcd_SetGpioRs( 0, LCD0_GPIO_RS, PIN_RS );
+	Lcd_SetGpioE( 0, LCD0_GPIO_E, PIN_E );
+	Lcd_SetGpioD0( 0, LCD0_GPIO_D0, PIN_D0 );
+	Lcd_Init();
+	LcdTask_Init();
+
+	SoilSensor_SetGpio( 0, SOILSENSOR0_GPIO, SOILSENSOR0_PIN );
+	SoilSensor_Init();
+
+	WaterSensor_SetGpio( 0, WATERSENSOR0_GPIO, WATERSENSOR0_PIN );
+	WaterSensor_Init();
+
+	Motor_SetGpio( 0, MOTOR0_GPIO, MOTOR0_PIN );
+	Motor_SetTimer( 0, MOTOR0_TIMER );
+	Motor_Init();
+
+	IrrigationTask_Init();
+
+	Scheduler_init();
+	Scheduler_addTask( LedTask_Update, NULL, 0, 100 );
+	Scheduler_addTask( IrrigationTask_Update, NULL, 1, 100 );
+	Scheduler_addTask( LcdTask_Update, NULL, 2, 5 );
+	systickInterrupt = Scheduler_update;
+	Scheduler_start();
+	while( 1 )
 	{
-		SCH_Dispatch_Tasks();
+		Scheduler_dispatchTasks();
 	}
-	return RETURN_NORMAL;
+	return SCH_RETURN_NORMAL;
 }
