@@ -15,27 +15,29 @@ typedef struct
 static Lcd_t Lcd[ LCD_NUMBER ];
 static uint8_t Lcd_RowAddress[ 4 ] = { 0x80, 0xC0, 0x90, 0xD0 };
 
-void Lcd_Init( void )
+void Lcd_Init( Id_t Id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t d0GpioId, uint8_t d0Pin )
 {
-	size_t Id = 0;
 	size_t Pin = 0;
-	for ( Id = 0; Id < LCD_NUMBER; Id++ )
+	Lcd[ Id ].GpioIdRs = rsGpioId;
+	Lcd[ Id ].PinRs = rsPin;
+	Lcd[ Id ].GpioIdE = eGpioId;
+	Lcd[ Id ].PinE = ePin;
+	Lcd[ Id ].GpioIdD0 = d0GpioId;
+	Lcd[ Id ].PinD0 = d0Pin;
+	Gpio_InitPin( Lcd[ Id ].GpioIdRs, Lcd[ Id ].PinRs, OUTPUT );
+	Gpio_InitPin( Lcd[ Id ].GpioIdE, Lcd[ Id ].PinE, OUTPUT );
+	for ( Pin = Lcd[ Id ].PinD0; Pin < ( Lcd[ Id ].PinD0 + 8 ); Pin++ )
 	{
-		Gpio_InitPin( Lcd[ Id ].GpioIdRs, Lcd[ Id ].PinRs, OUTPUT );
-		Gpio_InitPin( Lcd[ Id ].GpioIdE, Lcd[ Id ].PinE, OUTPUT );
-		for ( Pin = Lcd[ Id ].PinD0; Pin < ( Lcd[ Id ].PinD0 + 8 ); Pin++ )
-		{
-			Gpio_InitPin( Lcd[ Id ].GpioIdD0, Pin, OUTPUT );
-		}
-		Lcd_SetCommand( Id, RETURN_HOME );
-		DELAY_US( 100 );
-		Lcd_SetCommand( Id, DISPLAY_2_LINES_5x7_MATRIX_8_BIT );
-		DELAY_US( 100 );
-		Lcd_SetCommand( Id, DISPLAY_ON_CURSOR_OFF );
-		Lcd_SetCommand( Id, INCREMENT_CURSOR );
-		DELAY_US( 100 );
-		Lcd_Clear( Id );
+		Gpio_InitPin( Lcd[ Id ].GpioIdD0, Pin, OUTPUT );
 	}
+	Lcd_SetCommand( Id, RETURN_HOME );
+	DELAY_US( 100 );
+	Lcd_SetCommand( Id, DISPLAY_2_LINES_5x7_MATRIX_8_BIT );
+	DELAY_US( 100 );
+	Lcd_SetCommand( Id, DISPLAY_ON_CURSOR_OFF );
+	Lcd_SetCommand( Id, INCREMENT_CURSOR );
+	DELAY_US( 100 );
+	Lcd_Clear( Id );
 }
 
 void Lcd_SetCommand( Id_t Id, uint8_t Command )
@@ -76,22 +78,4 @@ void Lcd_Clear( Id_t Id )
 	Lcd_SetCommand( Id, CLEAR_DISPLAY );
 	Lcd_SetCommand( Id, FORCE_CURSOR_HOME );
 	DELAY_US( 2000 );
-}
-
-void Lcd_SetGpioRs( Id_t Id, Id_t GpioId, uint8_t Pin )
-{
-	Lcd[ Id ].GpioIdRs = GpioId;
-	Lcd[ Id ].PinRs = Pin;
-}
-
-void Lcd_SetGpioE( Id_t Id, Id_t GpioId, uint8_t Pin )
-{
-	Lcd[ Id ].GpioIdE = GpioId;
-	Lcd[ Id ].PinE = Pin;
-}
-
-void Lcd_SetGpioD0( Id_t Id, Id_t GpioId, uint8_t Pin )
-{
-	Lcd[ Id ].GpioIdD0 = GpioId;
-	Lcd[ Id ].PinD0 = Pin;
 }

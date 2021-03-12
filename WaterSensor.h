@@ -4,8 +4,7 @@
 #include "SchedulerConfig.h"
 #include "Gpio.h"
 
-void WaterSensor_Init( void );
+void WaterSensor_Init( Id_t Id, Id_t GpioId, uint8_t Pin );
 uint8_t WaterSensor_GetState( Id_t Id );
-void WaterSensor_SetGpio( Id_t Id, Id_t GpioId, uint8_t Pin );
 
 #endif	/* SOIL_SENSOR_H */

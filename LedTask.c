@@ -10,17 +10,13 @@ typedef struct
 
 static LedTask_t LedTask[ LED_TASK_NUMBER ];
 
-void LedTask_Init( void )
+void LedTask_Init( Id_t Id, Id_t GpioId, uint8_t Pin )
 {
-	size_t Id = 0;
-	for ( Id = 0; Id < LED_TASK_NUMBER; Id++ )
-	{
-		LedTask[ Id ].State = LOW;
-		LedTask[ Id ].Blink = 0;
-		LedTask[ Id ].Period = 0;
-		LedTask[ Id ].Delay = 0;
-	}
-	Led_Init();
+	LedTask[ Id ].State = LOW;
+	LedTask[ Id ].Blink = 0;
+	LedTask[ Id ].Period = 0;
+	LedTask[ Id ].Delay = 0;
+	Led_Init( Id, GpioId, Pin );
 }
 
 void LedTask_SetState( Id_t Id, uint8_t State, uint16_t Period )
@@ -31,20 +27,17 @@ void LedTask_SetState( Id_t Id, uint8_t State, uint16_t Period )
 
 void LedTask_Update( void *Paramter )
 {
-	size_t Id = 0;
-	for ( Id = 0; Id < LED_TASK_NUMBER; Id++ )
+	Id_t Id = (Id_t) Paramter;
+	if( LedTask[ Id ].Delay )
 	{
-		if( LedTask[ Id ].Delay )
-		{
-			LedTask[ Id ].Delay--;
-		}else if( LedTask[ Id ].Period )
-		{
-			LedTask[ Id ].Blink ^= LedTask[ Id ].State;
-			LedTask[ Id ].Delay = LedTask[ Id ].Period;
-		}else
-		{
-			LedTask[ Id ].Blink = 0;
-		}
-		Led_SetState( Id, !( LedTask[ Id ].State & !LedTask[ Id ].Blink ) );
+		LedTask[ Id ].Delay--;
+	}else if( LedTask[ Id ].Period )
+	{
+		LedTask[ Id ].Blink ^= LedTask[ Id ].State;
+		LedTask[ Id ].Delay = LedTask[ Id ].Period;
+	}else
+	{
+		LedTask[ Id ].Blink = 0;
 	}
+	Led_SetState( Id, !( LedTask[ Id ].State & !LedTask[ Id ].Blink ) );
 }
