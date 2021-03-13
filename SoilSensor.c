@@ -2,20 +2,20 @@
 
 typedef struct
 {
-	Id_t GpioId;
-	uint8_t Pin;
+	Id_t xGpioId;
+	uint8_t xPin;
 }SoilSensor_t;
 
-static SoilSensor_t SoilSensor[ SOIL_SENSOR_NUMBER ];
+static SoilSensor_t soilSensor[ SOIL_SENSOR_NUMBER ];
 
-void SoilSensor_Init( Id_t Id, Id_t GpioId, uint8_t Pin )
+void SoilSensor_init( Id_t id, Id_t xGpioId, uint8_t xPin )
 {
-	SoilSensor[ Id ].GpioId = GpioId;
-	SoilSensor[ Id ].Pin = Pin;
-	Gpio_InitPin( SoilSensor[ Id ].GpioId, SoilSensor[ Id ].Pin, OUTPUT );
+	soilSensor[ id ].xGpioId = xGpioId;
+	soilSensor[ id ].xPin = xPin;
+	Gpio_initPin( soilSensor[ id ].xGpioId, soilSensor[ id ].xPin, OUTPUT );
 }
 
-UBaseType_t SoilSensor_GetState( Id_t Id )
+UBaseType_t SoilSensor_getState( Id_t id )
 {
-	return Gpio_GetPinState( SoilSensor[ Id ].GpioId, SoilSensor[ Id ].Pin );
+	return Gpio_getPinState( soilSensor[ id ].xGpioId, soilSensor[ id ].xPin );
 }

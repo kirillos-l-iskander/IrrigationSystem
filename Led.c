@@ -2,23 +2,23 @@
 
 typedef struct
 {
-	Id_t GpioId;
-	uint8_t Pin;
-	uint8_t State;
+	Id_t xGpioId;
+	uint8_t xPin;
+	uint8_t state;
 }Led_t;
 
-static Led_t Led[ LED_NUMBER ];
+volatile static Led_t led[ LED_NUMBER ];
 
-void Led_Init( Id_t Id, Id_t GpioId, uint8_t Pin )
+void Led_init( Id_t id, Id_t xGpioId, uint8_t xPin )
 {
-	Led[ Id ].GpioId = GpioId;
-	Led[ Id ].Pin = Pin;
-	Led[ Id ].State = LOW;
-	Gpio_InitPin( Led[ Id ].GpioId, Led[ Id ].Pin, OUTPUT );
+	led[ id ].xGpioId = xGpioId;
+	led[ id ].xPin = xPin;
+	led[ id ].state = LOW;
+	Gpio_initPin( led[ id ].xGpioId, led[ id ].xPin, OUTPUT );
 }
 
-void Led_SetState( uint8_t Id, uint8_t State )
+void Led_setState( Id_t id, uint8_t state )
 {
-    Led[ Id ].State = State;
-	Gpio_SetPinState( Led[ Id ].GpioId, Led[ Id ].Pin, Led[ Id ].State );
+	led[ id ].state = state;
+	Gpio_setPinState( led[ id ].xGpioId, led[ id ].xPin, led[ id ].state );
 }

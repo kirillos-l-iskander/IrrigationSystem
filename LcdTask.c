@@ -2,58 +2,58 @@
 
 typedef struct
 {
-	uint8_t Buffer[ LCD_ROW_NUMBER ][ LCD_COL_NUMBER ];
-	uint8_t ReadingRowIndex;
-	uint8_t ReadingColumnIndex;
+	uint8_t buffer[ LCD_ROW_NUMBER ][ LCD_COL_NUMBER ];
+	uint8_t readingRowIndex;
+	uint8_t readingColumnIndex;
 }LcdTask_t;
 
-static LcdTask_t LcdTask[ LCD_TASK_NUMBER ];
+static LcdTask_t lcdTask[ LCD_NUMBER ];
 
-void LcdTask_Init( Id_t Id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t d0GpioId, uint8_t d0Pin )
+void LcdTask_init( Id_t id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t dGpioId, uint8_t dPin )
 {
-	LcdTask_Clear( Id );
-	LcdTask[ Id ].ReadingRowIndex = 0;
-	LcdTask[ Id ].ReadingColumnIndex = 0;
-	Lcd_Init( Id, rsGpioId, rsPin, eGpioId, ePin, d0GpioId, d0Pin );
+	LcdTask_clear( id );
+	lcdTask[ id ].readingRowIndex = 0;
+	lcdTask[ id ].readingColumnIndex = 0;
+	Lcd_init( id, rsGpioId, rsPin, eGpioId, ePin, dGpioId, dPin );
 }
 
-void LcdTask_SetCharacter( Id_t Id, uint8_t Character, uint8_t Row, uint8_t Col )
+void LcdTask_setCharacter( Id_t id, uint8_t character, uint8_t row, uint8_t col )
 {
-	LcdTask[ Id ].Buffer[ Row ][ Col ] = Character;
+	lcdTask[ id ].buffer[ row ][ col ] = character;
 }
 
-void LcdTask_SetString( Id_t Id, uint8_t* pString, uint8_t Row, uint8_t Col )
+void LcdTask_setString( Id_t id, uint8_t *string, uint8_t row, uint8_t col )
 {
-	size_t Index = 0;
-	for( Index = 0; pString[ Index ] != 0; Index++ )
+	size_t index = 0;
+	for( index = 0; string[ index ] != 0; index++ )
 	{
-		LcdTask[ Id ].Buffer[ Row ][ Col ] = pString[ Index ];
-		Col++;
-		if( Col == LCD_COL_NUMBER )
+		lcdTask[ id ].buffer[ row ][ col ] = string[ index ];
+		col++;
+		if( col == LCD_COL_NUMBER )
 		{
-			Col = 0;
-			Row++;
-			if( Row == LCD_ROW_NUMBER )
+			col = 0;
+			row++;
+			if( row == LCD_ROW_NUMBER )
 			{
-					Row = 0;
+					row = 0;
 			}
 		}
 	}
 }
 
-void LcdTask_Clear( Id_t Id )
+void LcdTask_clear( Id_t id )
 {
-	uint8_t Row = 0;
-	uint8_t Col = 0;
+	uint8_t row = 0;
+	uint8_t col = 0;
 	for( ; ; )
 	{
-		LcdTask[ Id ].Buffer[ Row ][ Col ] = ' ';
-		Col++;
-		if( Col == LCD_COL_NUMBER )
+		lcdTask[ id ].buffer[ row ][ col ] = ' ';
+		col++;
+		if( col == LCD_COL_NUMBER )
 		{
-			Col = 0;
-			Row++;
-			if( Row == LCD_ROW_NUMBER )
+			col = 0;
+			row++;
+			if( row == LCD_ROW_NUMBER )
 			{
 				break;
 			}
@@ -61,19 +61,19 @@ void LcdTask_Clear( Id_t Id )
 	}
 }
 
-void LcdTask_Update( void *Paramter )
+void LcdTask_update( void *paramter )
 {
-	Id_t Id = (Id_t) Paramter;
-	Lcd_SetCursor( Id, LcdTask[ Id ].ReadingRowIndex, LcdTask[ Id ].ReadingColumnIndex );
-	Lcd_SetCharacter( Id, LcdTask[ Id ].Buffer[ LcdTask[ Id ].ReadingRowIndex ][ LcdTask[ Id ].ReadingColumnIndex ] );
-	LcdTask[ Id ].ReadingColumnIndex++;
-	if( LcdTask[ Id ].ReadingColumnIndex == LCD_COL_NUMBER )
+	Id_t id = (Id_t) paramter;
+	Lcd_setCursor( id, lcdTask[ id ].readingRowIndex, lcdTask[ id ].readingColumnIndex );
+	Lcd_setCharacter( id, lcdTask[ id ].buffer[ lcdTask[ id ].readingRowIndex ][ lcdTask[ id ].readingColumnIndex ] );
+	lcdTask[ id ].readingColumnIndex++;
+	if( lcdTask[ id ].readingColumnIndex == LCD_COL_NUMBER )
 	{
-			LcdTask[ Id ].ReadingColumnIndex = 0;
-			LcdTask[ Id ].ReadingRowIndex++;
-			if( LcdTask[ Id ].ReadingRowIndex == LCD_ROW_NUMBER )
+			lcdTask[ id ].readingColumnIndex = 0;
+			lcdTask[ id ].readingRowIndex++;
+			if( lcdTask[ id ].readingRowIndex == LCD_ROW_NUMBER )
 			{
-					LcdTask[ Id ].ReadingRowIndex = 0;
+					lcdTask[ id ].readingRowIndex = 0;
 			}
 	}
 }

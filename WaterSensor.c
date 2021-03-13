@@ -2,20 +2,20 @@
 
 typedef struct
 {
-	Id_t GpioId;
-	uint8_t Pin;
+	Id_t xGpioId;
+	uint8_t xPin;
 }WaterSensor_t;
 
-static WaterSensor_t WaterSensor[ WATER_SENSOR_NUMBER ];
+static WaterSensor_t waterSensor[ WATER_SENSOR_NUMBER ];
 
-void WaterSensor_Init( Id_t Id, Id_t GpioId, uint8_t Pin )
+void WaterSensor_init( Id_t id, Id_t xGpioId, uint8_t xPin )
 {
-	WaterSensor[ Id ].GpioId = GpioId;
-	WaterSensor[ Id ].Pin = Pin;
-	Gpio_InitPin( WaterSensor[ Id ].GpioId, WaterSensor[ Id ].Pin, OUTPUT );
+	waterSensor[ id ].xGpioId = xGpioId;
+	waterSensor[ id ].xPin = xPin;
+	Gpio_initPin( waterSensor[ id ].xGpioId, waterSensor[ id ].xPin, OUTPUT );
 }
 
-uint8_t WaterSensor_GetState( Id_t Id )
+uint8_t WaterSensor_getState( Id_t id )
 {
-	return Gpio_GetPinState( WaterSensor[ Id ].GpioId, WaterSensor[ Id ].Pin );
+	return Gpio_getPinState( waterSensor[ id ].xGpioId, waterSensor[ id ].xPin );
 }

@@ -7,7 +7,12 @@
 #include "Motor.h"
 #include "LcdTask.h"
 
-void IrrigationTask_Init( void );
-void IrrigationTask_Update( void *Paramter );
+typedef enum
+{
+	IRRIGATION1_ID
+}IRRIGATION_t;
+
+void IrrigationTask_init( Id_t id );
+void IrrigationTask_update( void *paramter );
 
 #endif /* IRRIGATION_H */

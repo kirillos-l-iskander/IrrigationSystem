@@ -12,11 +12,16 @@
 #define DISPLAY_2_LINES_5x7_MATRIX_8_BIT ( 0x38 )
 #define FORCE_CURSOR_HOME ( 0x80 )
 
-void Lcd_Init( Id_t Id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t d0GpioId, uint8_t d0Pin );
-void Lcd_SetCommand( Id_t Id, uint8_t Command );
-void Lcd_SetCharacter( Id_t Id, uint8_t Character );
-void Lcd_SetString( Id_t Id, uint8_t* pString );
-void Lcd_SetCursor( Id_t Id, uint8_t Row, uint8_t Col );
-void Lcd_Clear( Id_t Id );
+typedef enum
+{
+	LCD1_ID
+}LCD_t;
+
+void Lcd_init( Id_t id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t dGpioId, uint8_t dPin );
+void Lcd_setCommand( Id_t id, uint8_t command );
+void Lcd_setCharacter( Id_t id, uint8_t character );
+void Lcd_setString( Id_t id, uint8_t *string );
+void Lcd_setCursor( Id_t id, uint8_t row, uint8_t col );
+void Lcd_clear( Id_t id );
 
 #endif	/* LCD_H */

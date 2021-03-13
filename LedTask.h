@@ -4,10 +4,8 @@
 #include "SchedulerConfig.h"
 #include "Led.h"
 
-#define BLINK_Period ( 0 )
-
-void LedTask_Init( Id_t Id, Id_t GpioId, uint8_t Pin );
-void LedTask_SetState( Id_t Id, uint8_t State, uint16_t Period );
-void LedTask_Update( void *Paramter );
+void LedTask_init( Id_t id, Id_t xGpioId, uint8_t xPin );
+void LedTask_setState( Id_t id, uint8_t state, uint16_t period );
+void LedTask_update( void *paramter );
 
 #endif	/* LED_TASK_H */

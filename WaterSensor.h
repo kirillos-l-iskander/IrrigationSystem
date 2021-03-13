@@ -4,7 +4,12 @@
 #include "SchedulerConfig.h"
 #include "Gpio.h"
 
-void WaterSensor_Init( Id_t Id, Id_t GpioId, uint8_t Pin );
-uint8_t WaterSensor_GetState( Id_t Id );
+typedef enum
+{
+	WATER_SENSOR1_ID
+}WATER_SENSOR_t;
+
+void WaterSensor_init( Id_t id, Id_t xGpioId, uint8_t xPin );
+uint8_t WaterSensor_getState( Id_t id );
 
 #endif	/* SOIL_SENSOR_H */

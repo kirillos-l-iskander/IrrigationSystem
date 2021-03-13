@@ -2,42 +2,42 @@
 
 typedef struct
 {
-	uint8_t State;
-	uint8_t Blink;
-	uint16_t Period;
-	uint16_t Delay;
+	uint8_t state;
+	uint8_t blink;
+	uint16_t period;
+	uint16_t delay;
 }LedTask_t;
 
-static LedTask_t LedTask[ LED_TASK_NUMBER ];
+static LedTask_t ledTask[ LED_NUMBER ];
 
-void LedTask_Init( Id_t Id, Id_t GpioId, uint8_t Pin )
+void LedTask_init( Id_t id, Id_t xGpioId, uint8_t xPin )
 {
-	LedTask[ Id ].State = LOW;
-	LedTask[ Id ].Blink = 0;
-	LedTask[ Id ].Period = 0;
-	LedTask[ Id ].Delay = 0;
-	Led_Init( Id, GpioId, Pin );
+	ledTask[ id ].state = LOW;
+	ledTask[ id ].blink = 0;
+	ledTask[ id ].period = 0;
+	ledTask[ id ].delay = 0;
+	Led_init( id, xGpioId, xPin );
 }
 
-void LedTask_SetState( Id_t Id, uint8_t State, uint16_t Period )
+void LedTask_setState( Id_t id, uint8_t state, uint16_t period )
 {
-	LedTask[ Id ].State = State;
-	LedTask[ Id ].Period = C_MS_TO_TICKS( Period ) / C_MS_TO_TICKS( 100 );
+	ledTask[ id ].state = state;
+	ledTask[ id ].period = MS_TO_TICKS( period ) / MS_TO_TICKS( 100 );
 }
 
-void LedTask_Update( void *Paramter )
+void LedTask_update( void *paramter )
 {
-	Id_t Id = (Id_t) Paramter;
-	if( LedTask[ Id ].Delay )
+	Id_t id = (Id_t) paramter;
+	if( ledTask[ id ].delay )
 	{
-		LedTask[ Id ].Delay--;
-	}else if( LedTask[ Id ].Period )
+		ledTask[ id ].delay--;
+	}else if( ledTask[ id ].period )
 	{
-		LedTask[ Id ].Blink ^= LedTask[ Id ].State;
-		LedTask[ Id ].Delay = LedTask[ Id ].Period;
+		ledTask[ id ].blink ^= ledTask[ id ].state;
+		ledTask[ id ].delay = ledTask[ id ].period;
 	}else
 	{
-		LedTask[ Id ].Blink = 0;
+		ledTask[ id ].blink = 0;
 	}
-	Led_SetState( Id, !( LedTask[ Id ].State & !LedTask[ Id ].Blink ) );
+	Led_setState( id, !( ledTask[ id ].state & !ledTask[ id ].blink ) );
 }

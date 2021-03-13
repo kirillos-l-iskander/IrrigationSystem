@@ -9,15 +9,18 @@
 #define LOW			( 0 )
 #define HIGH		( 1 )
 
-#define GPIOA_ID	( 0 )
-#define GPIOB_ID	( 1 )
-#define GPIOC_ID	( 2 )
-#define GPIOD_ID	( 3 )
+typedef enum
+{
+	GPIOA_ID,
+	GPIOB_ID,
+	GPIOC_ID,
+	GPIOD_ID
+}GPIO_t;
 
-void Gpio_InitPin( Id_t Id, UBaseType_t Pin, UBaseType_t Mode );
-void Gpio_SetPinState( Id_t Id, UBaseType_t Pin, UBaseType_t State );
-UBaseType_t Gpio_GetPinState( Id_t Id, UBaseType_t Pin );
-void Gpio_SetPortState( Id_t Id, UBaseType_t Pins, UBaseType_t State );
-UBaseType_t Gpio_GetPortState( Id_t Id, UBaseType_t Pins );
+void Gpio_initPin( Id_t id, UBaseType_t pin, UBaseType_t mode );
+void Gpio_setPinState( Id_t id, UBaseType_t pin, UBaseType_t state );
+UBaseType_t Gpio_getPinState( Id_t id, UBaseType_t pin );
+void Gpio_setPortState( Id_t Id, UBaseType_t pins, UBaseType_t state );
+UBaseType_t Gpio_getPortState( Id_t id, UBaseType_t pins );
 
 #endif /* GPIO_H */

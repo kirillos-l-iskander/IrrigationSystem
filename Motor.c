@@ -2,28 +2,28 @@
 
 typedef struct
 {
-	Id_t GpioId;
-	uint8_t Pin;
-	Id_t TimerId;
+	Id_t xGpioId;
+	uint8_t xPin;
+	Id_t xTimerId;
 }Motor_t;
 
-static Motor_t Motor[ MOTOR_NUMBER ];
+static Motor_t motor[ MOTOR_NUMBER ];
 
-void Motor_Init( Id_t Id, Id_t GpioId, uint8_t Pin, Id_t TimerId )
+void Motor_init( Id_t id, Id_t xGpioId, uint8_t xPin, Id_t xTimerId )
 {
-	Motor[ Id ].GpioId = GpioId;
-	Motor[ Id ].Pin = Pin;
-	Motor[ Id ].TimerId = TimerId;
-	Gpio_InitPin( Motor[ Id ].GpioId, Motor[ Id ].Pin, OUTPUT_AF );
-	Timer_InitPwm( Motor[ Id ].TimerId );
+	motor[ id ].xGpioId = xGpioId;
+	motor[ id ].xPin = xPin;
+	motor[ id ].xTimerId = xTimerId;
+	Gpio_initPin( motor[ id ].xGpioId, motor[ id ].xPin, OUTPUT_AF );
+	Timer_initPwm( motor[ id ].xTimerId );
 }
 
-void Motor_SetSpeed( Id_t Id, Timer_t Speed )
+void Motor_setSpeed( Id_t id, Timer_t speed )
 {
-	Timer_SetPwmDutyCycle( Motor[ Id ].TimerId, Speed );
+	Timer_setPwmDutyCycle( motor[ id ].xTimerId, speed );
 }
 
-Timer_t Motor_GetSpeed( Id_t Id )
+Timer_t Motor_getSpeed( Id_t id )
 {
-	return Timer_GetPwmDutyCycle( Motor[ Id ].TimerId );
+	return Timer_getPwmDutyCycle( motor[ id ].xTimerId );
 }

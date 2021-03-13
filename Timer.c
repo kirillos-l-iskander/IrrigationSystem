@@ -1,91 +1,91 @@
 #include "Timer.h"
 
-static void Timer0Init( uint8_t TicksNumber );
-static void Timer1Init( uint16_t TicksNumber );
-static void Timer2Init( uint8_t TicksNumber );
-static void Timer0InitPwm( void );
-static void Timer1InitPwm( void );
-static void Timer2InitPwm( void );
-static void Timer0SetPwmDutyCycle( uint8_t DutyCycle );
-static void Timer1SetPwmDutyCycle( uint16_t DutyCycle );
-static void Timer2SetPwmDutyCycle( uint8_t DutyCycle );
-static uint8_t Timer0GetPwmDutyCycle( void );
-static uint16_t Timer1GetPwmDutyCycle( void );
-static uint8_t Timer2GetPwmDutyCycle( void );
+static void Timer0_init( uint8_t tickNumber );
+static void Timer1_init( uint16_t tickNumber );
+static void Timer2_init( uint8_t tickNumber );
+static void Timer0_initPwm( void );
+static void Timer1_initPwm( void );
+static void Timer2_initPwm( void );
+static void Timer0_setPwmDutyCycle( uint8_t pwmDutyCycle );
+static void Timer1_setPwmDutyCycle( uint16_t pwmDutyCycle );
+static void Timer2_setPwmDutyCycle( uint8_t pwmDutyCycle );
+static uint8_t Timer0_getPwmDutyCycle( void );
+static uint16_t Timer1_getPwmDutyCycle( void );
+static uint8_t Timer2_getPwmDutyCycle( void );
 
-void Timer_Init( Id_t Id, Timer_t TicksNumber )
+void Timer_init( Id_t id, Timer_t tickNumber )
 {
-	switch( Id )
+	switch( id )
 	{
 		case 0:
-			Timer0Init( ( uint8_t ) TicksNumber );
+			Timer0_init( ( uint8_t ) tickNumber );
 			break;
 		case 1:
-			Timer1Init( ( uint16_t ) TicksNumber );
+			Timer1_init( ( uint16_t ) tickNumber );
 			break;
 		case 2:
-			Timer2Init( ( uint8_t ) TicksNumber );
+			Timer2_init( ( uint8_t ) tickNumber );
 			break;
 		default:
 			return;
 		}
 }
 
-void Timer_InitPwm( Id_t Id )
+void Timer_initPwm( Id_t id )
 {
-	switch( Id )
+	switch( id )
 	{
 		case 0:
-			Timer0InitPwm();
+			Timer0_initPwm();
 			break;
 		case 1:
-			Timer1InitPwm();
+			Timer1_initPwm();
 			break;
 		case 2:
-			Timer2InitPwm();
+			Timer2_initPwm();
 			break;
 		default:
 			return;
 	}
 }
 
-void Timer_SetPwmDutyCycle( Id_t Id, Timer_t DutyCycle )
+void Timer_setPwmDutyCycle( Id_t id, Timer_t pwmDutyCycle )
 {
-	switch( Id )
+	switch( id )
 	{
 		case 0:
-			Timer0SetPwmDutyCycle( ( uint8_t ) DutyCycle );
+			Timer0_setPwmDutyCycle( ( uint8_t ) pwmDutyCycle );
 			break;
 		case 1:
-			Timer1SetPwmDutyCycle( ( uint16_t ) DutyCycle );
+			Timer1_setPwmDutyCycle( ( uint16_t ) pwmDutyCycle );
 			break;
 		case 2:
-			Timer2SetPwmDutyCycle( ( uint8_t ) DutyCycle );
+			Timer2_setPwmDutyCycle( ( uint8_t ) pwmDutyCycle );
 			break;
 		default:
 			return;
 		}
 }
 
-Timer_t Timer_GetPwmDutyCycle( Id_t Id )
+Timer_t Timer_getPwmDutyCycle( Id_t id )
 {
-	switch( Id )
+	switch( id )
 	{
 		case 0:
-			return Timer0GetPwmDutyCycle();
+			return Timer0_getPwmDutyCycle();
 			break;
 		case 1:
-			return Timer1GetPwmDutyCycle();
+			return Timer1_getPwmDutyCycle();
 			break;
 		case 2:
-			return Timer2GetPwmDutyCycle();
+			return Timer2_getPwmDutyCycle();
 			break;
 		default:
 			return 0;
 		}
 }
 
-void Timer0Init( uint8_t TicksNumber )
+void Timer0_init( uint8_t tickNumber )
 {
 	//OC0 Normal Port Operation
 	//TIM0 CTC mode, OCR0 Top
@@ -96,7 +96,7 @@ void Timer0Init( uint8_t TicksNumber )
 	TCNT0 = 0;
 
 	//Compare Value
-	OCR0 = TicksNumber;
+	OCR0 = tickNumber;
 
 	//OC0 Interrupt
 	TIMSK = TIMSK | 0x02;
@@ -104,7 +104,7 @@ void Timer0Init( uint8_t TicksNumber )
 	//TIMSK = TIMSK | 0x01;
 }
 
-void Timer1Init( uint16_t TicksNumber )
+void Timer1_init( uint16_t tickNumber )
 {
 	//OC1A, OC1B Normal Port Operation
 	//TIM1 CTC mode, OCR1A Top
@@ -118,8 +118,8 @@ void Timer1Init( uint16_t TicksNumber )
 
 	//Compare Match Value
 	//ICR1 = 0;
-	OCR1AH = TicksNumber >> 8;
-	OCR1AL = TicksNumber;
+	OCR1AH = tickNumber >> 8;
+	OCR1AL = tickNumber;
 	//OCR1B = 0;
 
 	//OC1A Interrupt
@@ -129,7 +129,7 @@ void Timer1Init( uint16_t TicksNumber )
 	//TIMSK = TIMSK | 1<<TOIE1;
 }
 
-void Timer2Init( uint8_t TicksNumber )
+void Timer2_init( uint8_t tickNumber )
 {
 	//OC2 Normal Port Operation
 	//TIM2 CTC mode, OCR2 Top
@@ -140,7 +140,7 @@ void Timer2Init( uint8_t TicksNumber )
 	TCNT2 = 0;
 
 	//Compare Value
-	OCR2 = TicksNumber;
+	OCR2 = tickNumber;
 
 	//OC2 Interrupt
 	TIMSK = TIMSK | 0x80;
@@ -148,7 +148,7 @@ void Timer2Init( uint8_t TicksNumber )
 	//TIMSK = pxTimerHandle->TIMSK | 0x40;
 }
 
-void Timer0InitPwm( void )
+void Timer0_initPwm( void )
 {
 	//Fast PWM Mode
 	//None-inverting Mode
@@ -156,7 +156,7 @@ void Timer0InitPwm( void )
 	TCCR0 = 0x6C;
 }
 
-void Timer1InitPwm( void )
+void Timer1_initPwm( void )
 {
 	//Fast PWM Mode
 	//None-inverting Mode
@@ -165,7 +165,7 @@ void Timer1InitPwm( void )
 	TCCR1B = 0x0C;
 }
 
-void Timer2InitPwm( void )
+void Timer2_initPwm( void )
 {
 	//Fast PWM Mode
 	//None-inverting Mode
@@ -173,36 +173,36 @@ void Timer2InitPwm( void )
 	TCCR2 = 0x6E;
 }
 
-void Timer0SetPwmDutyCycle( uint8_t DutyCycle )
+void Timer0_setPwmDutyCycle( uint8_t pwmDutyCycle )
 {
 	//PWM DutyCycle from 0 to 255
-	OCR0 = DutyCycle;
+	OCR0 = pwmDutyCycle;
 }
 
-void Timer1SetPwmDutyCycle( uint16_t DutyCycle )
+void Timer1_setPwmDutyCycle( uint16_t pwmDutyCycle )
 {
 	//PWM DutyCycle from 0 to 255
-	OCR1AH = DutyCycle >> 8;
-	OCR1AL = DutyCycle;
+	OCR1AH = pwmDutyCycle >> 8;
+	OCR1AL = pwmDutyCycle;
 }
 
-void Timer2SetPwmDutyCycle( uint8_t DutyCycle )
+void Timer2_setPwmDutyCycle( uint8_t pwmDutyCycle )
 {
 	//PWM DutyCycle from 0 to 255
-	OCR2 = DutyCycle;
+	OCR2 = pwmDutyCycle;
 }
 
-uint8_t Timer0GetPwmDutyCycle( void )
+uint8_t Timer0_getPwmDutyCycle( void )
 {
 	return OCR0;
 }
 
-uint16_t Timer1GetPwmDutyCycle( void )
+uint16_t Timer1_getPwmDutyCycle( void )
 {
 	return ( ( OCR1AH << 8 ) + OCR1AL );
 }
 
-uint8_t Timer2GetPwmDutyCycle( void )
+uint8_t Timer2_getPwmDutyCycle( void )
 {
 	return OCR2;
 }

@@ -3,15 +3,18 @@
 
 #include "SchedulerConfig.h"
 
-#define TIMER0_ID ( 0 )
-#define TIMER1_ID ( 1 )
-#define TIMER2_ID ( 2 )
+typedef enum
+{
+	TIMER0_ID,
+	TIMER1_ID,
+	TIMER2_ID
+}TIMER_t;
 
 typedef uint16_t Timer_t;
 
-void Timer_Init( Id_t Id, Timer_t TicksNumber );
-void Timer_InitPwm( Id_t Id );
-void Timer_SetPwmDutyCycle( Id_t Id, Timer_t DutyCycle );
-Timer_t Timer_GetPwmDutyCycle( Id_t Id );
+void Timer_init( Id_t id, Timer_t tickNumber );
+void Timer_initPwm( Id_t id );
+void Timer_setPwmDutyCycle( Id_t id, Timer_t dutyCycle );
+Timer_t Timer_getPwmDutyCycle( Id_t id );
 
 #endif /* TIMER_H */

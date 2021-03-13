@@ -23,22 +23,17 @@ ISR(TIMER1_COMPA_vect)
 
 int main( void )
 {
-	LedTask_Init( 0, LED0_GPIO, LED0_PIN );
-
-	LcdTask_Init( 0, LCD0_GPIO_RS, PIN_RS, LCD0_GPIO_E, PIN_E, LCD0_GPIO_D0, PIN_D0 );
-
-	SoilSensor_Init( 0, SOILSENSOR0_GPIO, SOILSENSOR0_PIN );
-
-	WaterSensor_Init( 0, WATERSENSOR0_GPIO, WATERSENSOR0_PIN );
-
-	Motor_Init( 0, MOTOR0_GPIO, MOTOR0_PIN, MOTOR0_TIMER );
-
-	IrrigationTask_Init();
+	LedTask_init( LED1_ID, LED0_GPIO, LED0_PIN );
+	LcdTask_init( LCD1_ID, LCD0_GPIO_RS, PIN_RS, LCD0_GPIO_E, PIN_E, LCD0_GPIO_D0, PIN_D0 );
+	SoilSensor_init( SOIL_SENSOR1_ID, SOILSENSOR0_GPIO, SOILSENSOR0_PIN );
+	WaterSensor_init( WATER_SENSOR1_ID, WATERSENSOR0_GPIO, WATERSENSOR0_PIN );
+	Motor_init( MOTOR1_ID, MOTOR0_GPIO, MOTOR0_PIN, MOTOR0_TIMER );
+	IrrigationTask_init( IRRIGATION1_ID );
 
 	Scheduler_init();
-	Scheduler_addTask( LedTask_Update, (void *) 0, 0, 100 );
-	Scheduler_addTask( IrrigationTask_Update, (void *) 0, 1, 100 );
-	Scheduler_addTask( LcdTask_Update, (void *) 0, 2, 5 );
+	Scheduler_addTask( LedTask_update, (void *) LED1_ID, 0, 100 );
+	Scheduler_addTask( IrrigationTask_update, (void *) IRRIGATION1_ID, 1, 100 );
+	Scheduler_addTask( LcdTask_update, (void *) LCD1_ID, 2, 5 );
 	systickInterrupt = Scheduler_update;
 	Scheduler_start();
 	while( 1 )

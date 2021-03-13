@@ -5,8 +5,13 @@
 #include "Gpio.h"
 #include "Timer.h"
 
-void Motor_Init( Id_t Id, Id_t GpioId, uint8_t Pin, Id_t TimerId );
-void Motor_SetSpeed( Id_t Id, Timer_t Speed );
-Timer_t Motor_GetSpeed( Id_t Id );
+typedef enum
+{
+	MOTOR1_ID
+}MOTOR_t;
+
+void Motor_init( Id_t id, Id_t xGpioId, uint8_t xPin, Id_t xTimerId );
+void Motor_setSpeed( Id_t id, Timer_t speed );
+Timer_t Motor_getSpeed( Id_t id );
 
 #endif	/* MOTOR_H */
