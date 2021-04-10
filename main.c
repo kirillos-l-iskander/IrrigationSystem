@@ -6,13 +6,11 @@
 #include "Timer.h"
 
 #include "Led.h"
-#include "LedTask.h"
-#include "Lcd.h"
-#include "LcdTask.h"
-#include "SoilSensor.h"
-#include "WaterSensor.h"
+#include "Soilsnsr.h"
+#include "Watersnsr.h"
 #include "Motor.h"
-#include "IrrigationTask.h"
+#include "Lcd.h"
+#include "Irrigation.h"
 
 static void (*systickInterrupt)( void ) = NULL;
 
@@ -23,17 +21,20 @@ ISR(TIMER1_COMPA_vect)
 
 int main( void )
 {
-	LedTask_init( LED1_ID, LED0_GPIO, LED0_PIN );
-	LcdTask_init( LCD1_ID, LCD0_GPIO_RS, PIN_RS, LCD0_GPIO_E, PIN_E, LCD0_GPIO_D0, PIN_D0 );
-	SoilSensor_init( SOIL_SENSOR1_ID, SOILSENSOR0_GPIO, SOILSENSOR0_PIN );
-	WaterSensor_init( WATER_SENSOR1_ID, WATERSENSOR0_GPIO, WATERSENSOR0_PIN );
-	Motor_init( MOTOR1_ID, MOTOR0_GPIO, MOTOR0_PIN, MOTOR0_TIMER );
-	IrrigationTask_init( IRRIGATION1_ID );
+	Led_init( LED_ID_1, GPIO_ID_D, GPIO_PIN_7 );
+	Soilsnsr_init( SOILSNSR_ID_1, GPIO_ID_A, GPIO_PIN_0 );
+	Watersnsr_init( WATERSNSR_ID_1, GPIO_ID_A, GPIO_PIN_1 );
+	Motor_init( MOTOR_ID_1, GPIO_ID_B, GPIO_PIN_3, TIMER_ID_0, TIMER_CHANNEL_1 );
+	Lcd_init( LCD_ID_1, GPIO_ID_D, GPIO_PIN_2, GPIO_ID_D, GPIO_PIN_3, GPIO_ID_C, GPIO_PIN_0 );
+	Irrigation_init( IRRIGATION_ID_1, SOILSNSR_ID_1, WATERSNSR_ID_1, MOTOR_ID_1, LCD_ID_1 );
 
 	Scheduler_init();
-	Scheduler_addTask( LedTask_update, (void *) LED1_ID, 0, 100 );
-	Scheduler_addTask( IrrigationTask_update, (void *) IRRIGATION1_ID, 1, 100 );
-	Scheduler_addTask( LcdTask_update, (void *) LCD1_ID, 2, 5 );
+	Scheduler_addTask( Led_update, (void *) LED_ID_1, MS_TO_TICKS( 0 ), MS_TO_TICKS( 100 ) );
+	Scheduler_addTask( Soilsnsr_update, (void *) SOILSNSR_ID_1, MS_TO_TICKS( 1 ), MS_TO_TICKS( 100 ) );
+	Scheduler_addTask( Watersnsr_update, (void *) WATERSNSR_ID_1, MS_TO_TICKS( 1 ), MS_TO_TICKS( 100 ) );
+	Scheduler_addTask( Irrigation_update, (void *) IRRIGATION_ID_1, MS_TO_TICKS( 2 ), MS_TO_TICKS( 100 ) );
+	Scheduler_addTask( Motor_update, (void *) MOTOR_ID_1, MS_TO_TICKS( 3 ), MS_TO_TICKS( 100 ) );
+	Scheduler_addTask( Lcd_update, (void *) LCD_ID_1, MS_TO_TICKS( 3 ), MS_TO_TICKS( 5 ) );
 	systickInterrupt = Scheduler_update;
 	Scheduler_start();
 	while( 1 )

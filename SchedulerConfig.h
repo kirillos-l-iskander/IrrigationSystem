@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Config.h"
-
 //--------------------------------------------------------------------------------------------------------------------
 
 #define SCH_CPU_F												( 16000000 )
@@ -19,7 +17,7 @@
 #define SCH_TIMER_PRESCALER										( ( TickType_t ) 8 )
 #define SCH_SYSTICK_MAX											( ( TickType_t ) 65535 )
 
-#define SCH_MAX_TASKS											( ( UBaseType_t ) 8 )
+#define SCH_MAX_TASKS											( ( UBaseType_t ) 6 )
 
 #ifndef SCH_TRUE
 #define SCH_FALSE												( 0 )

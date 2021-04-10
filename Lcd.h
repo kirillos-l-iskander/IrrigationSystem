@@ -1,7 +1,7 @@
 #ifndef LCD_H
 #define	LCD_H
 
-#include "SchedulerConfig.h"
+#include "Config.h"
 #include "Gpio.h"
 
 #define CLEAR_DISPLAY ( 0x01 )
@@ -14,14 +14,44 @@
 
 typedef enum
 {
-	LCD1_ID
-}LCD_t;
+	LCD_ID_1 = 0,
+	LCD_ID_MAX,
+}	LCD_ID_t;
 
-void Lcd_init( Id_t id, Id_t rsGpioId, uint8_t rsPin, Id_t eGpioId, uint8_t ePin, Id_t dGpioId, uint8_t dPin );
-void Lcd_setCommand( Id_t id, uint8_t command );
-void Lcd_setCharacter( Id_t id, uint8_t character );
-void Lcd_setString( Id_t id, uint8_t *string );
-void Lcd_setCursor( Id_t id, uint8_t row, uint8_t col );
-void Lcd_clear( Id_t id );
+typedef enum
+{
+	LCD_ROW_0 = 0,
+	LCD_ROW_1,
+	LCD_ROW_2,
+	LCD_ROW_3,
+	LCD_ROW_MAX,
+}	LCD_ROW_t;
+
+typedef enum
+{
+	LCD_COL_0 = 0,
+	LCD_COL_1,
+	LCD_COL_2,
+	LCD_COL_3,
+	LCD_COL_4,
+	LCD_COL_5,
+	LCD_COL_6,
+	LCD_COL_7,
+	LCD_COL_8,
+	LCD_COL_9,
+	LCD_COL_10,
+	LCD_COL_11,
+	LCD_COL_12,
+	LCD_COL_13,
+	LCD_COL_14,
+	LCD_COL_15,
+	LCD_COL_MAX,
+}	LCD_COL_t;
+
+void Lcd_init( LCD_ID_t id, GPIO_ID_t gpioIdRs, GPIO_PIN_t gpioPinRs, GPIO_ID_t gpioIdE, GPIO_PIN_t gpioPinE, GPIO_ID_t gpioIdD, GPIO_PIN_t gpioPinD );
+void Lcd_update( void *paramter );
+void Lcd_setCharacter( LCD_ID_t id, char character, LCD_ROW_t row, LCD_COL_t col );
+void Lcd_setString( LCD_ID_t id, char *string, LCD_ROW_t row, LCD_COL_t col );
+void Lcd_clear( LCD_ID_t id );
 
 #endif	/* LCD_H */

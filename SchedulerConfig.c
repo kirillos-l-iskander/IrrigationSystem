@@ -1,22 +1,22 @@
 #include "SchedulerConfig.h"
 #include "Timer.h"
-#include "LedTask.h"
+#include "Led.h"
 
-void Scheduler_initSysTick( TickType_t msTickPeriod )
+void Scheduler_initSysTick( TickType_t systickPeriod )
 {
-	TickType_t tickNumber = ( TickType_t )( ( ( ( ( SCH_CPU_F / SCH_CPU_INSTRUCTION ) / SCH_TIMER_PRESCALER ) / 1000 ) * msTickPeriod ) - 1 );
-	SERG = SERG | 0x80;
-	Timer_init( TIMER1_ID, tickNumber );
+	GIE();
+	Timer_enableInterrupt( TIMER_ID_1 );
+	Timer_init( TIMER_ID_1, TIMER_MODE_NORMAL, systickPeriod, TIMER_CHANNEL_NORMAL, TIMER_EVENT_NORMAL );
 }
 
 void Scheduler_displayError( UBaseType_t errorCode )
 {
 	if( errorCode )
 	{
-		LedTask_setState( LED1_ID, LOW, 0 );
+		Led_setState( LED_ID_1, LED_STATE_OFF, LED_BLINK_0MS );
 	}else
 	{
-		LedTask_setState( LED1_ID, HIGH, 0 );
+		Led_setState( LED_ID_1, LED_STATE_ON, LED_BLINK_0MS );
 	}
 }
 
